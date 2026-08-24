@@ -116,7 +116,7 @@ with st.expander("Import New Data (CSV)"):
     if uploaded_file is not None:
         st.write("File Preview (First 10 rows):")
         df_preview = pd.read_csv(uploaded_file, dtype=str)
-        st.dataframe(df_preview.head(10), use_container_width=True)
+        st.dataframe(df_preview.head(10), width="stretch")
         uploaded_file.seek(0) 
 
         if st.button("Upload to Database"):
@@ -225,9 +225,9 @@ if main_module == "PC Fitment":
             
             if len(result_to_display) > MAX_DISPLAY_ROWS:
                 st.warning(f"Dataset contains {len(result_to_display)} records. Displaying the first {MAX_DISPLAY_ROWS} rows to prevent browser instability. Please use filters to narrow down the results.")
-                st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), use_container_width=True, hide_index=True)
+                st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), width="stretch", hide_index=True)
             else:
-                st.dataframe(result_to_display, use_container_width=True, hide_index=True)
+                st.dataframe(result_to_display, width="stretch", hide_index=True)
                 st.caption(f"Showing all {len(filtered_df)} matching vehicle records.")
         else:
             st.info("No vehicles found for the selected filters.")
@@ -314,7 +314,7 @@ if main_module == "PC Fitment":
                     "Wheel Base": ", ".join(r["WheelBases"]) if r["WheelBases"] else "All",
                     "Regions": ", ".join(r["Regions"]) if r["Regions"] else "All"
                 })
-            st.dataframe(pd.DataFrame(queue_data), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(queue_data), width="stretch", hide_index=True)
             
             col_q1, col_q2 = st.columns([1, 4])
             with col_q1:
@@ -370,9 +370,9 @@ if main_module == "PC Fitment":
                         
                         if len(df_master) > MAX_DISPLAY_ROWS:
                             st.warning(f"Preview limited to first {MAX_DISPLAY_ROWS} rows. Download the CSV to see all {len(df_master)} rows.")
-                            st.dataframe(df_master.head(MAX_DISPLAY_ROWS), use_container_width=True, hide_index=True)
+                            st.dataframe(df_master.head(MAX_DISPLAY_ROWS), width="stretch", hide_index=True)
                         else:
-                            st.dataframe(df_master, use_container_width=True, hide_index=True)
+                            st.dataframe(df_master, width="stretch", hide_index=True)
                         
                         csv_data = df_master.to_csv(index=False).encode('utf-8')
                         file_name = f"Fitment_{pc_part if pc_part else 'Listing'}.csv"
@@ -410,7 +410,7 @@ if main_module == "PC Fitment":
                                 cols_order = pc_grp + ['Year Range']
                                 df_grouped = df_grouped[cols_order]
                                 
-                                st.dataframe(df_grouped, use_container_width=True, hide_index=True)
+                                st.dataframe(df_grouped, width="stretch", hide_index=True)
                                 
                                 copy_text = []
                                 for _, row in df_grouped.iterrows():
@@ -444,10 +444,10 @@ if main_module == "PC Fitment":
                 
                 if len(result_to_display) > MAX_DISPLAY_ROWS:
                     st.warning(f"File contains {len(result_to_display)} records. Displaying the first {MAX_DISPLAY_ROWS} rows.")
-                    st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), use_container_width=True, hide_index=True)
+                    st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), width="stretch", hide_index=True)
                 else:
                     st.success(f"Loaded all {len(df_file)} rows from {selected_file}.")
-                    st.dataframe(result_to_display, use_container_width=True, hide_index=True)
+                    st.dataframe(result_to_display, width="stretch", hide_index=True)
 
 
 # ==========================================
@@ -520,9 +520,9 @@ elif main_module == "SEMA Data":
                 
                 if len(result_to_display) > MAX_DISPLAY_ROWS:
                     st.warning(f"Dataset contains {len(result_to_display)} records. Displaying the first {MAX_DISPLAY_ROWS} rows. Please use filters to narrow down the results.")
-                    st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), use_container_width=True, hide_index=True)
+                    st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), width="stretch", hide_index=True)
                 else:
-                    st.dataframe(result_to_display, use_container_width=True, hide_index=True)
+                    st.dataframe(result_to_display, width="stretch", hide_index=True)
                     st.caption(f"Showing all {len(filtered_df)} matching SEMA records.")
             else:
                 st.info("No records found for the selected filters.")
@@ -601,7 +601,7 @@ elif main_module == "SEMA Data":
                     "Positions": ", ".join(r["Positions"]) if r["Positions"] else "All",
                     "Regions": ", ".join(r["Regions"]) if r["Regions"] else "All"
                 })
-            st.dataframe(pd.DataFrame(queue_data), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(queue_data), width="stretch", hide_index=True)
             
             col_q1, col_q2 = st.columns([1, 4])
             with col_q1:
@@ -659,9 +659,9 @@ elif main_module == "SEMA Data":
                         
                         if len(df_master) > MAX_DISPLAY_ROWS:
                             st.warning(f"Preview limited to first {MAX_DISPLAY_ROWS} rows. Download the CSV to see all {len(df_master)} rows.")
-                            st.dataframe(df_master.head(MAX_DISPLAY_ROWS), use_container_width=True, hide_index=True)
+                            st.dataframe(df_master.head(MAX_DISPLAY_ROWS), width="stretch", hide_index=True)
                         else:
-                            st.dataframe(df_master, use_container_width=True, hide_index=True)
+                            st.dataframe(df_master, width="stretch", hide_index=True)
                         
                         csv_data = df_master.to_csv(index=False).encode('utf-8')
                         file_name = f"SEMA_Fitment_{sema_part if sema_part else 'Listing'}.csv"
@@ -699,7 +699,7 @@ elif main_module == "SEMA Data":
                                 cols_order = group_cols + ['Year Range']
                                 df_grouped = df_grouped[cols_order]
                                 
-                                st.dataframe(df_grouped, use_container_width=True, hide_index=True)
+                                st.dataframe(df_grouped, width="stretch", hide_index=True)
                                 
                                 copy_text = []
                                 for _, row in df_grouped.iterrows():
@@ -733,7 +733,7 @@ elif main_module == "SEMA Data":
                 
                 if len(result_to_display) > MAX_DISPLAY_ROWS:
                     st.warning(f"File contains {len(result_to_display)} records. Displaying the first {MAX_DISPLAY_ROWS} rows.")
-                    st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), use_container_width=True, hide_index=True)
+                    st.dataframe(result_to_display.head(MAX_DISPLAY_ROWS), width="stretch", hide_index=True)
                 else:
                     st.success(f"Loaded all {len(df_file)} rows from {selected_file}.")
-                    st.dataframe(result_to_display, use_container_width=True, hide_index=True)
+                    st.dataframe(result_to_display, width="stretch", hide_index=True)
