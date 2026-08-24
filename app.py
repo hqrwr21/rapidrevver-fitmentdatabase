@@ -30,7 +30,7 @@ if "sema_fitment_queue" not in st.session_state:
     st.session_state.sema_fitment_queue = []
 
 # --- 2. Data Engine (Full In-Memory Cache with Grouping) ---
-@st.cache_data(ttl=600, show_spinner=False)
+@st.cache_data(show_spinner=False)
 def load_all_data():
     """Fetches ALL CSVs from Backblaze B2 and assigns them to PC Fitment or SEMA groups."""
     try:
