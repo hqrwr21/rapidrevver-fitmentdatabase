@@ -44,7 +44,13 @@ def load_all_data():
                     key = obj['Key']
                     if key.lower().endswith('.csv'):
                         obj_data = s3_client.get_object(Bucket=B2_BUCKET, Key=key)
-                        df = pd.read_csv(obj_data['Body'], dtype=str)
+                        
+                        # MEMORY OPTIMIZATION: PyArrow uses 80% less RAM than standard strings
+                        df = pd.read_csv(
+                            obj_data['Body'], 
+                            engine='pyarrow',
+                            dtype_backend='pyarrow'
+                        )
                         
                         df["SourceFile"] = key.split('/')[-1] 
                         
@@ -115,7 +121,8 @@ with st.expander("Import New Data (CSV)"):
     
     if uploaded_file is not None:
         st.write("File Preview (First 10 rows):")
-        df_preview = pd.read_csv(uploaded_file, dtype=str)
+        # Memory optimization for preview
+        df_preview = pd.read_csv(uploaded_file, engine='pyarrow', dtype_backend='pyarrow')
         st.dataframe(df_preview.head(10), width="stretch")
         uploaded_file.seek(0) 
 
@@ -199,9 +206,9 @@ if main_module == "PC Fitment":
 
         if not filtered_df.empty:
             if search_car:
-                mask = (filtered_df['Make'].str.contains(search_car, case=False, na=False) | 
-                        filtered_df['Model'].str.contains(search_car, case=False, na=False) |
-                        filtered_df['SubModel'].str.contains(search_car, case=False, na=False))
+                mask = (filtered_df['Make'].astype(str).str.contains(search_car, case=False, na=False) | 
+                        filtered_df['Model'].astype(str).str.contains(search_car, case=False, na=False) |
+                        filtered_df['SubModel'].astype(str).str.contains(search_car, case=False, na=False))
                 filtered_df = filtered_df[mask]
 
             if selected_year != "All" and "Year" in filtered_df.columns: filtered_df = filtered_df[filtered_df["Year"] == selected_year]
@@ -384,7 +391,6 @@ if main_module == "PC Fitment":
                             mime="text/csv"
                         )
                         
-                        # --- Group By / Summary Section ---
                         st.divider()
                         st.subheader("Summarize Data (For Copy/Pasting into Listings)")
                         st.write("Select the columns to keep. The app will remove duplicates and automatically group the years into ranges for easy copying.")
@@ -648,7 +654,6 @@ elif main_module == "SEMA Data":
                         
                         df_master = df_master.drop_duplicates().sort_values(by=["Brand", "Make", "Model", "Year"])
                         
-                        # Apply the global part number override if the user typed one in
                         if sema_part:
                             if "Part" in df_master.columns:
                                 df_master["Part"] = sema_part
