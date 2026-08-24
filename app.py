@@ -45,12 +45,7 @@ def load_all_data():
                     if key.lower().endswith('.csv'):
                         obj_data = s3_client.get_object(Bucket=B2_BUCKET, Key=key)
                         
-                        # MEMORY OPTIMIZATION: PyArrow uses 80% less RAM than standard strings
-                        df = pd.read_csv(
-                            obj_data['Body'], 
-                            engine='pyarrow',
-                            dtype_backend='pyarrow'
-                        )
+                        df = pd.read_csv(obj_data['Body'], dtype=str, on_bad_lines='skip')
                         
                         df["SourceFile"] = key.split('/')[-1] 
                         
@@ -73,7 +68,7 @@ def load_all_data():
             df_combined = pd.concat(all_dfs, ignore_index=True)
             return df_combined.fillna("")
     except Exception as e:
-        print(f"Backblaze B2 Fetch Error: {e}")
+        st.error(f"Backblaze B2 Fetch Error: {e}")
         
     return pd.DataFrame()
 
